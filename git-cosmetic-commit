@@ -1,0 +1,14 @@
+#!/bin/bash
+
+DEFAULT_MSG="Non functional updates (cc auto)"
+MSG=${COMMIT_COSMETIC_MSG:-$DEFAULT_MSG}
+BRANCH_NAME=$(git symbolic-ref --short -q HEAD)
+PREVIOUS_BRANCH_LAST_COMMIT=$(git reflog --no-abbrev-commit | grep  "[a-zA-Z0-9]*HEAD@{[0-9]*}: checkout:.*$BRANCH_NAME"  | tail -n 1 | sed -n 's/\(^[a-zA-Z0-9]*\) .*/\1/p')
+LAST_COMMIT=$(git log -n 1 --pretty=format:%H)
+EXISTING_NON_FNC_COMMIT=$(git log --grep="^$MSG" $PREVIOUS_BRANCH_LAST_COMMIT..HEAD --pretty=format:%H)
+
+if [ $PREVIOUS_BRANCH_LAST_COMMIT != $LAST_COMMIT ] && [ -n "$EXISTING_NON_FNC_COMMIT" ]; then
+  git commit --fixup "$EXISTING_NON_FNC_COMMIT"
+else
+  git commit -m "$MSG"
+fi
