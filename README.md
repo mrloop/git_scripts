@@ -17,3 +17,5 @@ Creates a new commit for cosmetic changes on current feature branch or creates a
 ```sh
 git cosmetic-commit
 ```
+
+Read the [blog post](http://blog.mrloop.com/workflow/2016/05/29/improving-workflow-in-git.html).
